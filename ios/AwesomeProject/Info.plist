@@ -4,6 +4,12 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+	<key>NSCameraUsageDescription</key>
+    <string>We need camera access for liveness detection</string>
+	<key>NSCameraUsageDescription</key>
+    <string>We need access to your camera</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>We need access to your photo library</string>
 	<key>CFBundleDisplayName</key>
 	<string>AwesomeProject</string>
 	<key>CFBundleExecutable</key>
