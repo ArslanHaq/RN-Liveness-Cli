@@ -2,77 +2,31 @@ import {
     ActivityIndicator,
     Alert,
     Image,
-    PermissionsAndroid,
-    Platform,
     StyleSheet,
     Text,
     TouchableOpacity,
     View,
 } from 'react-native';
-import {useState} from 'react';
-import {RouteProp, useRoute} from '@react-navigation/native';
-import {CameraOptions, launchCamera,} from 'react-native-image-picker';
+import { useState } from 'react';
+import { RouteProp, useRoute } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
 import PrimaryButton from '../components/PrimaryButton';
-import {verificationWithPicture} from '../api/verification';
+import { verificationWithPicture } from '../api/verification';
 import Colors from "../constants/Colors.ts";
-
-;
-
-type RootStackParamList = {
-    VerifyPicture: { cnic: string };
-};
+import { RootStackParamList } from "../constants/Constants.ts";
 
 type ScreenRouteProp = RouteProp<RootStackParamList, 'VerifyPicture'>;
 
 export default function VerifyPictureScreen() {
-    const {params} = useRoute<ScreenRouteProp>();
+    const { params } = useRoute<ScreenRouteProp>();
     const cnic = params.cnic;
+    const faceImage = params.faceImages;
 
-    const [imageUri, setImageUri] = useState<string | null>(null);
-    const [imageLoading, setImageLoading] = useState(false);
+    const [imageUri, setImageUri] = useState<string>(faceImage);
     const [loading, setLoading] = useState(false);
 
-    const takePicture = async () => {
-        if (Platform.OS === 'android') {
-            const granted = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.CAMERA,
-                {
-                    title: 'Camera Permission',
-                    message: 'App needs camera access to take pictures',
-                    buttonNeutral: 'Ask Me Later',
-                    buttonNegative: 'Cancel',
-                    buttonPositive: 'OK',
-                }
-            );
-
-            if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-                Alert.alert('Permission Denied', 'Camera permission is required.');
-                return;
-            }
-        }
-        const options: CameraOptions = {
-            mediaType: 'photo',
-            quality: 0.8,
-            saveToPhotos: true,
-        };
-
-        setImageLoading(true);
-
-        try {
-            const result = await launchCamera(options);
-            if (result.didCancel) return;
-            const uri = result.assets?.[0]?.uri;
-            if (uri) setImageUri(uri);
-        } catch (err: any) {
-            Alert.alert('Camera Error', err?.message || 'Unable to launch camera.');
-        } finally {
-            setImageLoading(false);
-        }
-    };
-
-    const removeImage = () => setImageUri(null);
+    const removeImage = () => setImageUri('');
 
     const handleUpload = async () => {
         if (!imageUri) return;
@@ -88,7 +42,8 @@ export default function VerifyPictureScreen() {
                     : '❌ Verification Failed',
                 text2: `Similarity: ${(result.similarity * 100).toFixed(2)}%`,
             });
-            if (result.verified) setImageUri(null);
+
+            if (result.verified) setImageUri('');
         } catch (error: any) {
             Toast.show({
                 type: 'error',
@@ -101,31 +56,26 @@ export default function VerifyPictureScreen() {
     };
 
     return (
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
             <View style={styles.container}>
                 <Text style={styles.title}>📷 Verification With Picture</Text>
                 <Text style={styles.subtitle}>ID Card Number: {cnic}</Text>
 
-                <PrimaryButton label="📸   Take Picture" onPress={takePicture}/>
-
-                {imageLoading && (
-                    <ActivityIndicator size="large" color={Colors.primary} style={{marginTop: 20}}/>
-                )}
-
-                {imageUri && (
+                {imageUri ? (
                     <>
                         <View style={styles.imageWrapper}>
-                            <Image source={{uri: imageUri}} style={styles.preview}/>
-                            <TouchableOpacity style={styles.deleteIcon} onPress={removeImage}>
-                            </TouchableOpacity>
+                            <Image source={{ uri: imageUri }} style={styles.preview} />
+                            <TouchableOpacity style={styles.deleteIcon} onPress={removeImage} />
                         </View>
 
-                        <PrimaryButton label="Verify" onPress={handleUpload}/>
+                        <PrimaryButton label="Verify" onPress={handleUpload} />
                     </>
+                ) : (
+                    <Text style={{ color: Colors.text }}>No image available</Text>
                 )}
 
                 {loading && (
-                    <ActivityIndicator size="large" color={Colors.primary} style={{marginTop: 20}}/>
+                    <ActivityIndicator size="large" color={Colors.primary} style={{ marginTop: 20 }} />
                 )}
             </View>
         </View>
@@ -156,7 +106,7 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOpacity: 0.2,
         shadowRadius: 6,
-        shadowOffset: {width: 0, height: 4},
+        shadowOffset: { width: 0, height: 4 },
         borderRadius: 12,
     },
     preview: {

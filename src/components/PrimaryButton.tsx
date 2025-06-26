@@ -1,9 +1,9 @@
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import Colors from '../constants/Colors.ts';
 
-export default function PrimaryButton({ label, onPress }: { label: string, onPress: () => void }) {
+export default function PrimaryButton({ label, onPress, disabled }: { label: string, onPress: () => void , disabled?: boolean}) {
     return (
-        <TouchableOpacity style={styles.button} onPress={onPress}>
+        <TouchableOpacity style={styles.button} onPress={onPress} disabled={disabled}>
             <Text style={styles.label}>{label}</Text>
         </TouchableOpacity>
     );

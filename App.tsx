@@ -11,6 +11,7 @@ import RegisterIdCardScreen from "./src/screens/RegistrationIdCardScreen.tsx";
 import AppHeader from "./src/components/AppHeader.tsx";
 import VerifyPictureScreen from "./src/screens/VerifyPictureScreen.tsx";
 import FakeLivenessScreen from "./src/screens/LivenessScreen.tsx";
+import {RootStackParamList} from "./src/constants/Constants.ts";
 
 
 function App(): React.JSX.Element {
@@ -19,7 +20,7 @@ function App(): React.JSX.Element {
     // const backgroundStyle = {
     //     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
     // };
-    const Stack = createNativeStackNavigator();
+    const Stack = createNativeStackNavigator<RootStackParamList>();
 
     return (
         <>
