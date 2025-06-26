@@ -1,13 +1,12 @@
-import { View, Text, Alert, StyleSheet } from 'react-native';
-import { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import Animated, { FadeInUp } from 'react-native-reanimated';
+import {Alert, StyleSheet, Text, View} from 'react-native';
+import {useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
 
 import CNICInput from '../components/CNICInput.tsx';
 import PrimaryButton from '../components/PrimaryButton.tsx';
 import Colors from '../constants/Colors.ts';
-import { validateCnic } from '../utils/validateCnic.ts';
-import { formatCnic } from '../utils/formatCnic.ts'; // Assuming this exists
+import {validateCnic} from '../utils/validateCnic.ts';
+import {formatCnic} from '../utils/formatCnic.ts'; // Assuming this exists
 
 export default function HomeScreen() {
     const [cnic, setCnic] = useState('');
@@ -22,30 +21,22 @@ export default function HomeScreen() {
             return;
         }
         console.log(`Navigating to ${screenName} with CNIC: ${rawCnic}`);
-        navigation.navigate(screenName, { cnic: rawCnic });
+        navigation.navigate(screenName, {cnic: rawCnic});
     };
 
     return (
         <View style={styles.container}>
             <Text style={styles.heading}>Welcome to the Registration System</Text>
 
-            <CNICInput value={formatCnic(cnic)} onChange={setCnic} />
+            <CNICInput value={formatCnic(cnic)} onChange={setCnic}/>
 
-            <Animated.View entering={FadeInUp.delay(300)}>
-                <PrimaryButton label="Register using Picture" onPress={() => goTo('RegisterPicture')} />
-            </Animated.View>
+            <PrimaryButton label="Register using Picture" onPress={() => goTo('RegisterPicture')}/>
 
-            <Animated.View entering={FadeInUp.delay(400)}>
-                <PrimaryButton label="Register using ID Card" onPress={() => goTo('RegisterIdCard')} />
-            </Animated.View>
 
-            <Animated.View entering={FadeInUp.delay(500)}>
-                <PrimaryButton label="Verify" onPress={() => goTo('VerifyPicture')} />
-            </Animated.View>
+            <PrimaryButton label="Register using ID Card" onPress={() => goTo('RegisterIdCard')}/>
 
-            <Animated.View entering={FadeInUp.delay(600)}>
-                <PrimaryButton label="Liveness" onPress={() => goTo('Liveness')} />
-            </Animated.View>
+            <PrimaryButton label="Verify" onPress={() => goTo('Liveness')}/>
+
         </View>
     );
 }
